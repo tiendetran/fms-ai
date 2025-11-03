@@ -18,7 +18,7 @@ public class DocumentEmbedding : BaseEntity
 /// <summary>
 /// Chat history
 /// </summary>
-public class ChatHistory : BaseEntity
+public class ChatHistoryModel : BaseEntity
 {
     public string SessionId { get; set; } = string.Empty;
     public string UserId { get; set; } = string.Empty;

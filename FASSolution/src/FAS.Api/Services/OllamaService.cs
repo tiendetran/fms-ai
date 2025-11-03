@@ -49,7 +49,7 @@ public class OllamaService : IOllamaService
             _logger.LogDebug("Sending chat request to Ollama with model: {Model}", _chatModel);
 
             var responseContent = new System.Text.StringBuilder();
-            await foreach (var response in _ollamaClient.Chat(request))
+            await foreach (var response in _ollamaClient.ChatAsync(request))
             {
                 if (response?.Message?.Content != null)
                 {
@@ -82,12 +82,12 @@ public class OllamaService : IOllamaService
             var request = new EmbedRequest
             {
                 Model = _embeddingModel,
-                Input = text
+                Input = new List<string> { text }
             };
 
             var response = await _ollamaClient.EmbedAsync(request);
 
-            if (response?.Embeddings == null || response.Embeddings.Length == 0)
+            if (response?.Embeddings == null || response.Embeddings[0].Length == 0)
             {
                 throw new InvalidOperationException("Ollama returned empty embedding");
             }
@@ -106,7 +106,7 @@ public class OllamaService : IOllamaService
     {
         try
         {
-            var models = await _ollamaClient.ListLocalModels();
+            var models = await _ollamaClient.ListLocalModelsAsync();
             var chatModelExists = models.Any(m => m.Name.Contains(_chatModel));
             var embeddingModelExists = models.Any(m => m.Name.Contains(_embeddingModel));
 

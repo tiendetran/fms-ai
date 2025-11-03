@@ -56,8 +56,8 @@ public interface IDocumentEmbeddingRepository : IBaseRepository<DocumentEmbeddin
     Task<bool> DeleteBySourceAsync(string sourceTable, int sourceRecordId);
 }
 
-public interface IChatHistoryRepository : IBaseRepository<ChatHistory>
+public interface IChatHistoryRepository : IBaseRepository<ChatHistoryModel>
 {
-    Task<IEnumerable<ChatHistory>> GetBySessionIdAsync(string sessionId);
-    Task<IEnumerable<ChatHistory>> GetByUserIdAsync(string userId, int limit = 50);
+    Task<IEnumerable<ChatHistoryModel>> GetBySessionIdAsync(string sessionId);
+    Task<IEnumerable<ChatHistoryModel>> GetByUserIdAsync(string userId, int limit = 50);
 }

@@ -1,5 +1,7 @@
 ﻿using FAS.Core.Entities;
 using FAS.Core.Interfaces;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace FAS.Api.Services;
 

@@ -1,7 +1,6 @@
 ﻿using FAS.Core.Interfaces;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
-using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using System.Text;
 
 namespace FAS.Api.Services;

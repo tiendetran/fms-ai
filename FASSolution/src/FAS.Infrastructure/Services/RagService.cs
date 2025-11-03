@@ -55,7 +55,7 @@ public class RagService : IRagService
             var response = await _ollamaService.ChatAsync(prompt, null);
 
             // 4. Save chat history
-            var chatHistory = new ChatHistory
+            var chatHistory = new ChatHistoryModel
             {
                 SessionId = sessionId,
                 UserId = userId,

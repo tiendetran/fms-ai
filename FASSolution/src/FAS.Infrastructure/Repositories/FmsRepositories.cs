@@ -162,21 +162,21 @@ public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
     }
 }
 
-public class ChatHistoryRepository : BaseRepository<ChatHistory>, IChatHistoryRepository
+public class ChatHistoryRepository : BaseRepository<ChatHistoryModel>, IChatHistoryRepository
 {
     public ChatHistoryRepository(IDbContext dbContext)
         : base(dbContext, "chat_history")
     {
     }
 
-    public async Task<IEnumerable<ChatHistory>> GetBySessionIdAsync(string sessionId)
+    public async Task<IEnumerable<ChatHistoryModel>> GetBySessionIdAsync(string sessionId)
     {
         using var connection = _dbContext.CreatePostgreSqlConnection();
         var sql = "SELECT * FROM chat_history WHERE session_id = @SessionId AND is_deleted = FALSE ORDER BY chat_time ASC";
-        return await connection.QueryAsync<ChatHistory>(sql, new { SessionId = sessionId });
+        return await connection.QueryAsync<ChatHistoryModel>(sql, new { SessionId = sessionId });
     }
 
-    public async Task<IEnumerable<ChatHistory>> GetByUserIdAsync(string userId, int limit = 50)
+    public async Task<IEnumerable<ChatHistoryModel>> GetByUserIdAsync(string userId, int limit = 50)
     {
         using var connection = _dbContext.CreatePostgreSqlConnection();
         var sql = @"
@@ -184,6 +184,6 @@ public class ChatHistoryRepository : BaseRepository<ChatHistory>, IChatHistoryRe
             WHERE user_id = @UserId AND is_deleted = FALSE 
             ORDER BY chat_time DESC 
             LIMIT @Limit";
-        return await connection.QueryAsync<ChatHistory>(sql, new { UserId = userId, Limit = limit });
+        return await connection.QueryAsync<ChatHistoryModel>(sql, new { UserId = userId, Limit = limit });
     }
 }

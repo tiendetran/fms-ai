@@ -1,4 +1,5 @@
 ﻿using FAS.Api.Services;
+using FAS.Core.DTOs;
 using FAS.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +41,7 @@ public class AuthController : ControllerBase
             {
                 Token = token,
                 Username = request.Username,
-                ExpiresIn = 3600
+                ExpiresAt = DateTime.UtcNow.AddHours(1)
             });
         }
         catch (Exception ex)
@@ -67,17 +68,4 @@ public class AuthController : ControllerBase
             return StatusCode(500, new { message = "An error occurred during token validation" });
         }
     }
-}
-
-public class LoginRequest
-{
-    public string Username { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-}
-
-public class LoginResponse
-{
-    public string Token { get; set; } = string.Empty;
-    public string Username { get; set; } = string.Empty;
-    public int ExpiresIn { get; set; }
 }

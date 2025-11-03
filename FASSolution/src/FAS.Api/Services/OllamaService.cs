@@ -64,7 +64,7 @@ public class OllamaService : IOllamaService
             }
 
             _logger.LogDebug("Received response from Ollama");
-            return response.Message.Content;
+            return result;
         }
         catch (Exception ex)
         {
@@ -79,7 +79,7 @@ public class OllamaService : IOllamaService
         {
             _logger.LogDebug("Generating embedding for text of length: {Length}", text.Length);
 
-            var request = new GenerateEmbeddingRequest
+            var request = new EmbedRequest
             {
                 Model = _embeddingModel,
                 Input = text

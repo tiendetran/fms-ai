@@ -1,0 +1,99 @@
+================================================================================
+FMS RAG SYSTEM - DANH SÁCH FILES
+================================================================================
+
+📁 ROOT DIRECTORY
+-----------------
+├── .gitignore                  → Git ignore rules
+├── docker-compose.yml          → Docker multi-container setup
+├── init-db.sql                → PostgreSQL initialization script
+├── test-api.sh                → API testing script (bash)
+├── QUICK_START.txt            → Quick start guide
+├── README.md                  → Main documentation
+├── SETUP.md                   → Setup instructions
+├── ARCHITECTURE.md            → System architecture
+├── PROJECT_SUMMARY.md         → Project summary
+└── FILE_LIST.txt              → This file
+
+📁 API/ (Main Application)
+---------------------------
+├── FMS.RAG.API.csproj         → Project file (.NET 9.0)
+├── Program.cs                 → Application entry point
+├── appsettings.json           → Configuration file
+├── Dockerfile                 → Docker image definition
+
+📁 API/Controllers/ (5 files)
+------------------------------
+├── AuthController.cs          → JWT Authentication endpoint
+├── QueryController.cs         → RAG Query processing
+├── SyncController.cs          → Database synchronization
+├── PdfController.cs           → PDF management
+└── SystemController.cs        → Health check & system status
+
+📁 API/Services/ (8 files)
+---------------------------
+├── AuthService.cs                    → Authentication logic
+├── FMSAgentService.cs                → AI Agent (Semantic Kernel)
+├── OllamaService.cs                  → Ollama API integration
+├── VectorStoreService.cs             → Vector embeddings (pgvector)
+├── DatabaseSyncService.cs            → SQL→PostgreSQL sync
+├── DatabaseSyncBackgroundService.cs  → Auto-sync scheduler
+├── PdfProcessingService.cs           → PDF text extraction
+└── QueryService.cs                   → Query processing & logging
+
+📁 API/Data/ (1 file)
+---------------------
+└── DatabaseContext.cs         → Dapper connection factory
+
+📁 API/Middleware/ (1 file)
+---------------------------
+└── ErrorHandlingMiddleware.cs → Global error handling
+
+📁 API/Models/ (Empty - DTOs in services)
+------------------------------------------
+(Models/DTOs được định nghĩa inline trong services)
+
+================================================================================
+TỔNG KẾT
+========
+📊 Total Files: 28
+📦 Total Size: ~134 KB
+
+Phân loại:
+- Source Code (C#): 18 files
+- Configuration: 2 files (appsettings.json, .csproj)
+- Documentation: 5 files (*.md, *.txt)
+- Scripts: 2 files (init-db.sql, test-api.sh)
+- Docker: 2 files (Dockerfile, docker-compose.yml)
+- Git: 1 file (.gitignore)
+
+================================================================================
+TECH STACK SUMMARY
+==================
+✅ ASP.NET Core 9.0
+✅ C# 13
+✅ Dapper (ORM)
+✅ PostgreSQL 18 + pgvector
+✅ Microsoft Semantic Kernel
+✅ Ollama (gpt-oss:120b-cloud, nomic-embed-text)
+✅ JWT Authentication
+✅ Swagger/OpenAPI
+✅ Serilog
+✅ Docker
+
+================================================================================
+KEY FEATURES
+============
+✅ RAG System with vector similarity search
+✅ AI Agent with query understanding
+✅ Automated database synchronization
+✅ PDF document processing
+✅ RESTful API with Swagger
+✅ JWT-based security
+✅ Comprehensive logging
+✅ Background services
+✅ Docker deployment ready
+
+================================================================================
+Version 1.0.0 | November 2025
+================================================================================

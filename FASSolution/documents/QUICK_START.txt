@@ -1,0 +1,124 @@
+================================================================================
+    FMS RAG SYSTEM - QUICK START GUIDE
+================================================================================
+
+🎯 MỤC TIÊU
+-----------
+Hệ thống API ASP.NET Core 9.0 với AI Agent và RAG để truy vấn thông minh 
+cho Factory Management System
+
+📦 NỘI DUNG PROJECT
+-------------------
+✅ 27 files tổng cộng
+✅ Source code hoàn chỉnh (C#, ASP.NET Core 9.0)
+✅ Documentation đầy đủ
+✅ Docker deployment files
+✅ Database initialization scripts
+✅ API testing scripts
+
+📂 CẤU TRÚC CHÍNH
+-----------------
+API/
+  ├── Controllers/      (5 controllers)
+  ├── Services/         (8 services)
+  ├── Data/            (Database context)
+  ├── Middleware/      (Error handling)
+  └── Program.cs       (Entry point)
+
+🔧 YÊU CẦU HỆ THỐNG
+-------------------
+✅ .NET 9.0 SDK
+✅ PostgreSQL 18 + pgvector extension
+✅ SQL Server (source database)
+✅ Ollama server với models:
+   - gpt-oss:120b-cloud
+   - nomic-embed-text
+
+🚀 CÁCH SỬ DỤNG NHANH
+---------------------
+
+BƯỚC 1: Setup Database
+-----------------------
+psql -U postgres -f init-db.sql
+
+BƯỚC 2: Cấu hình
+----------------
+cd API
+Chỉnh sửa appsettings.json:
+- ConnectionStrings (SQL Server và PostgreSQL)
+- OllamaSettings (endpoint)
+- JwtSettings (secret key)
+
+BƯỚC 3: Chạy ứng dụng
+---------------------
+dotnet restore
+dotnet run
+
+Hoặc với Docker:
+docker-compose up -d
+
+BƯỚC 4: Test API
+----------------
+./test-api.sh
+
+Hoặc truy cập Swagger:
+http://localhost:5000
+
+📖 TÀI LIỆU CHI TIẾT
+--------------------
+├── README.md           → Hướng dẫn sử dụng
+├── SETUP.md           → Hướng dẫn cài đặt chi tiết
+├── ARCHITECTURE.md    → Kiến trúc hệ thống
+└── PROJECT_SUMMARY.md → Tóm tắt project
+
+🔑 DEFAULT CREDENTIALS
+----------------------
+Username: admin
+Password: admin123
+
+⚠️ LƯU Ý: Đổi password trong production!
+
+🌐 API ENDPOINTS
+----------------
+Auth:    POST /api/auth/login
+Query:   POST /api/query
+Sync:    POST /api/sync/all (Admin)
+PDF:     POST /api/pdf/upload
+System:  GET  /api/system/health
+
+📊 TÍNH NĂNG CHÍNH
+------------------
+✅ RAG System với pgvector
+✅ AI Agent với Semantic Kernel
+✅ Auto-sync SQL Server → PostgreSQL
+✅ PDF processing và indexing
+✅ JWT Authentication
+✅ Swagger documentation
+✅ Structured logging (Serilog)
+✅ Docker deployment ready
+
+🐛 TROUBLESHOOTING
+------------------
+1. Ollama không kết nối:
+   curl http://192.168.2.252:11434/api/tags
+
+2. Database error:
+   psql -U postgres -d fms_rag
+
+3. Check logs:
+   Logs/fms-rag-YYYY-MM-DD.txt
+
+💡 CÂU QUERY MẪU
+----------------
+"Tồn kho nguyên liệu hiện tại"
+"Danh sách nhập nguyên liệu tháng này"
+"Đơn hàng đang chờ sản xuất"
+"Thống kê xuất bán hàng tuần trước"
+
+📧 SUPPORT
+----------
+Kiểm tra documentation hoặc liên hệ development team
+
+================================================================================
+Version 1.0.0 | November 2025 | Made with ❤️
+================================================================================

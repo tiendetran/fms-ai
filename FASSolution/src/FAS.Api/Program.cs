@@ -1,3 +1,6 @@
+using FAS.Api.Data;
+using FAS.Api.Services;
+using FAS.Core.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;

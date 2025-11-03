@@ -1,4 +1,5 @@
-﻿using FAS.Core.Interfaces;
+﻿using Dapper;
+using FAS.Core.Interfaces;
 
 namespace FAS.Api.Services;
 

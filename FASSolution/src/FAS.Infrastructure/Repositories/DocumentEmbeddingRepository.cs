@@ -1,5 +1,7 @@
-﻿using FAS.Core.Entities;
+﻿using Dapper;
+using FAS.Core.Entities;
 using FAS.Core.Interfaces;
+using Pgvector;
 
 namespace FAS.Infrastructure.Repositories;
 

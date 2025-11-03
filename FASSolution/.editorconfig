@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# CRR0029: ConfigureAwait(true) is called implicitly
+dotnet_diagnostic.CRR0029.severity = none
+
+# CRR0039: The 'await' expression is missing a cancellation token
+dotnet_diagnostic.CRR0039.severity = none

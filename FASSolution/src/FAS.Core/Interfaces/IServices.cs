@@ -1,5 +1,6 @@
 ﻿using FAS.Core.DTOs;
 using FAS.Core.Entities;
+using OllamaSharp.Models.Chat;
 
 namespace FAS.Core.Interfaces;
 
@@ -13,12 +14,19 @@ namespace FAS.Core.Interfaces;
 //    Task<bool> TestConnectionAsync();
 //}
 
+public interface IOllamaService
+{
+    Task<string> ChatAsync(string prompt, List<Message>? conversationHistory = null);
+    Task<float[]> GenerateEmbeddingAsync(string text);
+    Task<bool> IsModelAvailableAsync();
+}
+
 /// <summary>
 /// Service cho RAG
 /// </summary>
 public interface IRagService
 {
-    Task<ChatResponse> ChatAsync(ChatRequest request);
+    Task<ChatResponse> ChatAsync(ChatRequestModel request);
     Task<List<RetrievedDocument>> RetrieveRelevantDocumentsAsync(string query, int topK = 5);
     Task<bool> IndexDocumentAsync(string content, string documentName, string documentType, string? metadata = null);
     Task<bool> IndexDatabaseRecordAsync(string tableName, int recordId, Dictionary<string, object> data);

@@ -23,7 +23,7 @@ public class ChatController : ControllerBase
     /// Chat với AI về dữ liệu FMS
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<ApiResponse<ChatResponse>>> Chat([FromBody] ChatRequest request)
+    public async Task<ActionResult<ApiResponse<ChatResponse>>> Chat([FromBody] ChatRequestModel request)
     {
         try
         {
@@ -75,7 +75,7 @@ public class ChatController : ControllerBase
     /// Hỏi về phiếu nhập nguyên liệu
     /// </summary>
     [HttpPost("material-receipts")]
-    public async Task<ActionResult<ApiResponse<ChatResponse>>> AskMaterialReceipts([FromBody] ChatRequest request)
+    public async Task<ActionResult<ApiResponse<ChatResponse>>> AskMaterialReceipts([FromBody] ChatRequestModel request)
     {
         try
         {
@@ -94,7 +94,7 @@ public class ChatController : ControllerBase
     /// Hỏi về phiếu xuất bán hàng
     /// </summary>
     [HttpPost("sales-orders")]
-    public async Task<ActionResult<ApiResponse<ChatResponse>>> AskSalesOrders([FromBody] ChatRequest request)
+    public async Task<ActionResult<ApiResponse<ChatResponse>>> AskSalesOrders([FromBody] ChatRequestModel request)
     {
         try
         {
@@ -113,7 +113,7 @@ public class ChatController : ControllerBase
     /// Hỏi về tồn kho
     /// </summary>
     [HttpPost("inventory")]
-    public async Task<ActionResult<ApiResponse<ChatResponse>>> AskInventory([FromBody] ChatRequest request)
+    public async Task<ActionResult<ApiResponse<ChatResponse>>> AskInventory([FromBody] ChatRequestModel request)
     {
         try
         {
@@ -136,7 +136,7 @@ public class ChatController : ControllerBase
     {
         try
         {
-            var request = new ChatRequest
+            var request = new ChatRequestModel
             {
                 Message = $"Tạo báo cáo: {reportRequest}",
                 IncludeContext = true

@@ -1,6 +1,8 @@
 ﻿using FAS.Core.DTOs;
+using FAS.Core.Entities;
 using FAS.Core.Interfaces;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace FAS.Infrastructure.Services;
 
@@ -23,7 +25,7 @@ public class RagService : IRagService
         _logger = logger;
     }
 
-    public async Task<ChatResponse> ChatAsync(ChatRequest request)
+    public async Task<ChatResponse> ChatAsync(ChatRequestModel request)
     {
         try
         {
@@ -222,4 +224,5 @@ public class RagService : IRagService
         // Rough estimation: ~4 characters per token
         return text.Length / 4;
     }
+
 }

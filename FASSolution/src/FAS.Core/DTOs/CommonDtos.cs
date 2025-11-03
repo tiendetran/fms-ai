@@ -3,7 +3,7 @@
 /// <summary>
 /// Request/Response cho Chat
 /// </summary>
-public class ChatRequest
+public class ChatRequestModel
 {
     public string Message { get; set; } = string.Empty;
     public string? SessionId { get; set; }

@@ -1,4 +1,5 @@
-﻿using FAS.Core.Entities;
+﻿using Dapper;
+using FAS.Core.Entities;
 using FAS.Core.Interfaces;
 
 namespace FAS.Infrastructure.Repositories;

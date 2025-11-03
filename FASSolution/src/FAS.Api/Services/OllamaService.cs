@@ -1,14 +1,9 @@
-﻿using OllamaSharp;
+﻿using FAS.Core.Interfaces;
+using OllamaSharp;
 using OllamaSharp.Models.Chat;
+using System.Threading;
 
 namespace FAS.Api.Services;
-
-public interface IOllamaService
-{
-    Task<string> ChatAsync(string prompt, List<Message>? conversationHistory = null);
-    Task<float[]> GenerateEmbeddingAsync(string text);
-    Task<bool> IsModelAvailableAsync();
-}
 
 public class OllamaService : IOllamaService
 {
@@ -60,7 +55,7 @@ public class OllamaService : IOllamaService
             }
 
             _logger.LogDebug("Received response from Ollama");
-            return response.Message.Content;
+            return response?.Message?.Content ?? "";
         }
         catch (Exception ex)
         {
@@ -75,7 +70,7 @@ public class OllamaService : IOllamaService
         {
             _logger.LogDebug("Generating embedding for text of length: {Length}", text.Length);
 
-            var request = new GenerateEmbeddingRequest
+            var request = new EmbeddingsRequest
             {
                 Model = _embeddingModel,
                 Prompt = text

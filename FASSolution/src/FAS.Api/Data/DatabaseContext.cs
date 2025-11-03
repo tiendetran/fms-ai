@@ -5,12 +5,6 @@ using System.Data;
 
 namespace FAS.Api.Data;
 
-//public interface IDatabaseContext
-//{
-//    IDbConnection CreatePostgreSqlConnection();
-//    IDbConnection CreateSqlServerConnection();
-//}
-
 public class DatabaseContext : IDatabaseContext
 {
     private readonly IConfiguration _configuration;

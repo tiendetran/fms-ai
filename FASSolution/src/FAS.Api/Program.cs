@@ -1,4 +1,5 @@
 using FAS.Api.Data;
+using FAS.Api.Middleware;
 using FAS.Api.Services;
 using FAS.Core.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -97,8 +98,12 @@ builder.Services.AddScoped<IPdfProcessingService, PdfProcessingService>();
 builder.Services.AddScoped<IFMSAgentService, FMSAgentService>();
 builder.Services.AddScoped<IQueryService, QueryService>();
 
+// Register Background Task Queue
+builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+
 // Register Background Services
 builder.Services.AddHostedService<DatabaseSyncBackgroundService>();
+builder.Services.AddHostedService<QueuedHostedService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -126,7 +131,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 
-//app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseCors("AllowAll");
 

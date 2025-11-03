@@ -10,16 +10,22 @@ namespace FAS.Api.Controllers;
 public class PdfController : ControllerBase
 {
     private readonly IPdfProcessingService _pdfService;
+    private readonly IBackgroundTaskQueue _taskQueue;
+    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<PdfController> _logger;
     private readonly long _maxFileSizeBytes;
     private readonly string _uploadPath;
 
     public PdfController(
         IPdfProcessingService pdfService,
+        IBackgroundTaskQueue taskQueue,
+        IServiceProvider serviceProvider,
         IConfiguration configuration,
         ILogger<PdfController> logger)
     {
         _pdfService = pdfService;
+        _taskQueue = taskQueue;
+        _serviceProvider = serviceProvider;
         _logger = logger;
 
         var pdfSettings = configuration.GetSection("PDFSettings");
@@ -66,17 +72,21 @@ public class PdfController : ControllerBase
 
             _logger.LogInformation("PDF uploaded: {FileName}", fileName);
 
-            // Process PDF in background
-            _ = Task.Run(async () =>
+            // Queue PDF processing as background task with proper service scope
+            await _taskQueue.QueueBackgroundWorkItemAsync(async token =>
             {
+                using var scope = _serviceProvider.CreateScope();
+                var pdfService = scope.ServiceProvider.GetRequiredService<IPdfProcessingService>();
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<PdfController>>();
+
                 try
                 {
-                    await _pdfService.ProcessAndStorePdfAsync(filePath, documentId);
-                    _logger.LogInformation("PDF processed successfully: {DocumentId}", documentId);
+                    await pdfService.ProcessAndStorePdfAsync(filePath, documentId);
+                    logger.LogInformation("PDF processed successfully: {DocumentId}", documentId);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error processing PDF: {DocumentId}", documentId);
+                    logger.LogError(ex, "Error processing PDF: {DocumentId}", documentId);
                 }
             });
 

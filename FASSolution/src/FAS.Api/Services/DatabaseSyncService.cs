@@ -69,6 +69,12 @@ public class DatabaseSyncService : IDatabaseSyncService
 
     public async Task SyncTableAsync(string tableName)
     {
+        // Validate table name để tránh SQL injection
+        if (!_tablesToSync.Contains(tableName))
+        {
+            throw new ArgumentException($"Table '{tableName}' is not in the allowed sync list", nameof(tableName));
+        }
+
         _logger.LogInformation("Syncing table: {TableName}", tableName);
 
         try
@@ -85,8 +91,8 @@ public class DatabaseSyncService : IDatabaseSyncService
             // Create table in PostgreSQL if not exists
             await CreatePostgresTableAsync(postgresConnection, tableName, schema);
 
-            // Get row count
-            var countSql = $"SELECT COUNT(*) FROM {tableName}";
+            // Get row count - sử dụng quoted identifier để tránh SQL injection
+            var countSql = $"SELECT COUNT(*) FROM [{tableName}]";
             var totalRows = await sqlServerConnection.ExecuteScalarAsync<int>(countSql);
 
             _logger.LogInformation("Table {TableName} has {TotalRows} rows", tableName, totalRows);
@@ -95,13 +101,14 @@ public class DatabaseSyncService : IDatabaseSyncService
             var offset = 0;
             while (offset < totalRows)
             {
+                // Sử dụng quoted identifier và parameterized values
                 var dataSql = $@"
-                    SELECT * FROM {tableName}
+                    SELECT * FROM [{tableName}]
                     ORDER BY (SELECT NULL)
-                    OFFSET {offset} ROWS
-                    FETCH NEXT {_batchSize} ROWS ONLY";
+                    OFFSET @Offset ROWS
+                    FETCH NEXT @BatchSize ROWS ONLY";
 
-                var data = await sqlServerConnection.QueryAsync(dataSql);
+                var data = await sqlServerConnection.QueryAsync(dataSql, new { Offset = offset, BatchSize = _batchSize });
                 var dataList = data.ToList();
 
                 if (dataList.Any())
@@ -146,15 +153,18 @@ public class DatabaseSyncService : IDatabaseSyncService
         string tableName,
         List<ColumnSchema> schema)
     {
+        // Validate và sanitize column names
         var columns = schema.Select(c =>
         {
             var pgType = MapSqlServerTypeToPostgres(c.DataType, c.MaxLength);
             var nullable = c.IsNullable == "YES" ? "" : "NOT NULL";
-            return $"{c.ColumnName} {pgType} {nullable}";
+            // Sử dụng quoted identifier cho column names
+            return $"\"{c.ColumnName}\" {pgType} {nullable}";
         });
 
+        // Sử dụng quoted identifier cho table name trong PostgreSQL
         var createTableSql = $@"
-            CREATE TABLE IF NOT EXISTS {tableName.ToLower()} (
+            CREATE TABLE IF NOT EXISTS ""{tableName.ToLower()}"" (
                 {string.Join(",\n                ", columns)}
             );";
 
@@ -170,11 +180,13 @@ public class DatabaseSyncService : IDatabaseSyncService
         if (!data.Any()) return;
 
         var columnNames = schema.Select(c => c.ColumnName).ToList();
-        var columns = string.Join(", ", columnNames);
+        // Sử dụng quoted identifier cho column names
+        var columns = string.Join(", ", columnNames.Select(c => $"\"{c}\""));
         var parameters = string.Join(", ", columnNames.Select(c => $"@{c}"));
 
+        // Sử dụng quoted identifier cho table name
         var upsertSql = $@"
-            INSERT INTO {tableName.ToLower()} ({columns})
+            INSERT INTO ""{tableName.ToLower()}"" ({columns})
             VALUES ({parameters})
             ON CONFLICT DO NOTHING;";
 

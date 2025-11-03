@@ -127,11 +127,24 @@ public class AuthService : IAuthService
 
     private bool VerifyPassword(string password, string passwordHash)
     {
-        // Trong production, sử dụng BCrypt.Net-Next hoặc tương tự
-        // Ví dụ: return BCrypt.Net.BCrypt.Verify(password, passwordHash);
+        // Sử dụng BCrypt để verify password an toàn
+        try
+        {
+            return BCrypt.Net.BCrypt.Verify(password, passwordHash);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error verifying password");
+            return false;
+        }
+    }
 
-        // Đơn giản hóa cho demo - KHÔNG dùng trong production
-        return password == passwordHash; // Cần thay bằng proper hashing
+    /// <summary>
+    /// Hash password sử dụng BCrypt - dùng khi tạo user mới hoặc đổi password
+    /// </summary>
+    public static string HashPassword(string password)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
     public Task<LoginResponse?> LoginAsync(LoginRequest request)

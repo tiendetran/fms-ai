@@ -45,11 +45,12 @@ public class PdfProcessingService : IPdfProcessingService
             _logger.LogInformation("Extracting text from PDF: {FilePath}", filePath);
 
             using var pdfReader = new PdfReader(filePath);
+            using var pdfDocument = new iText.Kernel.Pdf.PdfDocument(pdfReader);
             var text = new StringBuilder();
 
-            for (int page = 1; page <= pdfReader.NumberOfPages; page++)
+            for (int page = 1; page <= pdfDocument.GetNumberOfPages(); page++)
             {
-                var pageText = PdfTextExtractor.GetTextFromPage(pdfReader, page);
+                var pageText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(page));
                 text.AppendLine(pageText);
             }
 
@@ -70,11 +71,12 @@ public class PdfProcessingService : IPdfProcessingService
             _logger.LogInformation("Extracting text from PDF stream");
 
             using var pdfReader = new PdfReader(pdfStream);
+            using var pdfDocument = new iText.Kernel.Pdf.PdfDocument(pdfReader);
             var text = new StringBuilder();
 
-            for (int page = 1; page <= pdfReader.NumberOfPages; page++)
+            for (int page = 1; page <= pdfDocument.GetNumberOfPages(); page++)
             {
-                var pageText = PdfTextExtractor.GetTextFromPage(pdfReader, page);
+                var pageText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(page));
                 text.AppendLine(pageText);
             }
 

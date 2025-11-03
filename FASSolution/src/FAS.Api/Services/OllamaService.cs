@@ -53,15 +53,23 @@ public class OllamaService : IOllamaService
 
             _logger.LogDebug("Sending chat request to Ollama with model: {Model}", _chatModel);
 
-            var response = await _ollamaClient.Chat(request);
+            var responseContent = new System.Text.StringBuilder();
+            await foreach (var response in _ollamaClient.Chat(request))
+            {
+                if (response?.Message?.Content != null)
+                {
+                    responseContent.Append(response.Message.Content);
+                }
+            }
 
-            if (response?.Message?.Content == null)
+            var result = responseContent.ToString();
+            if (string.IsNullOrEmpty(result))
             {
                 throw new InvalidOperationException("Ollama returned empty response");
             }
 
             _logger.LogDebug("Received response from Ollama");
-            return response.Message.Content;
+            return result;
         }
         catch (Exception ex)
         {

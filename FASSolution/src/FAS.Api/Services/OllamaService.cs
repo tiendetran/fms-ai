@@ -1,4 +1,5 @@
 ﻿using OllamaSharp;
+using OllamaSharp.Models;
 using OllamaSharp.Models.Chat;
 
 namespace FAS.Api.Services;
@@ -75,21 +76,21 @@ public class OllamaService : IOllamaService
         {
             _logger.LogDebug("Generating embedding for text of length: {Length}", text.Length);
 
-            var request = new GenerateEmbeddingRequest
+            var request = new EmbedRequest
             {
                 Model = _embeddingModel,
-                Prompt = text
+                Input = text
             };
 
-            var response = await _ollamaClient.GenerateEmbeddings(request);
+            var response = await _ollamaClient.EmbedAsync(request);
 
-            if (response?.Embedding == null || response.Embedding.Length == 0)
+            if (response?.Embeddings == null || response.Embeddings.Length == 0)
             {
                 throw new InvalidOperationException("Ollama returned empty embedding");
             }
 
-            _logger.LogDebug("Generated embedding with dimensions: {Dimensions}", response.Embedding.Length);
-            return response.Embedding;
+            _logger.LogDebug("Generated embedding with dimensions: {Dimensions}", response.Embeddings[0].Length);
+            return response.Embeddings[0];
         }
         catch (Exception ex)
         {

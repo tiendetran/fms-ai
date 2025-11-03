@@ -1,5 +1,6 @@
 ﻿using FAS.Core.Interfaces;
 using OllamaSharp;
+using OllamaSharp.Models;
 using OllamaSharp.Models.Chat;
 using System.Threading;
 
@@ -47,15 +48,23 @@ public class OllamaService : IOllamaService
 
             _logger.LogDebug("Sending chat request to Ollama with model: {Model}", _chatModel);
 
-            var response = await _ollamaClient.Chat(request);
+            var responseContent = new System.Text.StringBuilder();
+            await foreach (var response in _ollamaClient.Chat(request))
+            {
+                if (response?.Message?.Content != null)
+                {
+                    responseContent.Append(response.Message.Content);
+                }
+            }
 
-            if (response?.Message?.Content == null)
+            var result = responseContent.ToString();
+            if (string.IsNullOrEmpty(result))
             {
                 throw new InvalidOperationException("Ollama returned empty response");
             }
 
             _logger.LogDebug("Received response from Ollama");
-            return response?.Message?.Content ?? "";
+            return response.Message.Content;
         }
         catch (Exception ex)
         {
@@ -70,21 +79,21 @@ public class OllamaService : IOllamaService
         {
             _logger.LogDebug("Generating embedding for text of length: {Length}", text.Length);
 
-            var request = new EmbeddingsRequest
+            var request = new GenerateEmbeddingRequest
             {
                 Model = _embeddingModel,
-                Prompt = text
+                Input = text
             };
 
-            var response = await _ollamaClient.GenerateEmbeddings(request);
+            var response = await _ollamaClient.EmbedAsync(request);
 
-            if (response?.Embedding == null || response.Embedding.Length == 0)
+            if (response?.Embeddings == null || response.Embeddings.Length == 0)
             {
                 throw new InvalidOperationException("Ollama returned empty embedding");
             }
 
-            _logger.LogDebug("Generated embedding with dimensions: {Dimensions}", response.Embedding.Length);
-            return response.Embedding;
+            _logger.LogDebug("Generated embedding with dimensions: {Dimensions}", response.Embeddings[0].Length);
+            return response.Embeddings[0];
         }
         catch (Exception ex)
         {

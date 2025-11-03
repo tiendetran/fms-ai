@@ -2,6 +2,8 @@ using FAS.Api.Data;
 using FAS.Api.Middleware;
 using FAS.Api.Services;
 using FAS.Core.Interfaces;
+using FAS.Infrastructure.Repositories;
+using FAS.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -97,6 +99,11 @@ builder.Services.AddScoped<IDatabaseSyncService, DatabaseSyncService>();
 builder.Services.AddScoped<IPdfProcessingService, PdfProcessingService>();
 builder.Services.AddScoped<IFMSAgentService, FMSAgentService>();
 builder.Services.AddScoped<IQueryService, QueryService>();
+builder.Services.AddScoped<IRagService, RagService>();
+
+// Register Repositories
+builder.Services.AddScoped<IDocumentEmbeddingRepository, DocumentEmbeddingRepository>();
+builder.Services.AddScoped<IChatHistoryRepository, ChatHistoryRepository>();
 
 // Register Background Task Queue
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();

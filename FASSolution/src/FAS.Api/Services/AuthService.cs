@@ -147,8 +147,37 @@ public class AuthService : IAuthService
         return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
-    public Task<LoginResponse?> LoginAsync(LoginRequest request)
+    public async Task<LoginResponse?> LoginAsync(LoginRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                _logger.LogWarning("Login request with empty username or password");
+                return null;
+            }
+
+            var token = await AuthenticateAsync(request.Username, request.Password);
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return null;
+            }
+
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var expiryMinutes = int.Parse(jwtSettings["ExpiryInMinutes"] ?? "60");
+
+            return new LoginResponse
+            {
+                Token = token,
+                Username = request.Username,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(expiryMinutes)
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during login for user: {Username}", request.Username);
+            return null;
+        }
     }
 }

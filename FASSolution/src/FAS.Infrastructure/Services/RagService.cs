@@ -44,11 +44,15 @@ public class RagService : IRagService
                 .Select(d => $"{d.Source}: {d.Content}")
                 .ToList();
 
-            // 3. Generate response using Ollama
-            var response = await _ollamaService.GenerateChatResponseAsync(
-                request.Message,
-                contextTexts.Any() ? contextTexts : null
-            );
+            // 3. Build prompt with context and generate response using Ollama
+            var prompt = request.Message;
+            if (contextTexts.Any())
+            {
+                var contextSection = string.Join("\n", contextTexts);
+                prompt = $"Context:\n{contextSection}\n\nQuestion: {request.Message}";
+            }
+
+            var response = await _ollamaService.ChatAsync(prompt, null);
 
             // 4. Save chat history
             var chatHistory = new ChatHistory

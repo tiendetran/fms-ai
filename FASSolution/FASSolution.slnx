@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FAS.Api/FAS.Api.csproj" />
+    <Project Path="src/FAS.Core/FAS.Core.csproj" />
+    <Project Path="src/FAS.Infrastructure/FAS.Infrastructure.csproj" />
+  </Folder>
+</Solution>

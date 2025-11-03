@@ -1,0 +1,27 @@
+Công ty tôi đang có một phần mềm quản lý về nhà máy có tên là FMS (Factory Management System).
+Quản lý chuỗi cung ứng (SCM):
+I. Dữ liệu khởi tạo (Master base)
+- Nguyên liệu, thành phẩm, nhà kho, đơn vị tính, nhà cung cấp, nhà sản xuất, khách hàng...
+II. Thông tin các phiếu
+1. Nhập nguyên liệu -> Kiểm tra nguyên liệu (LAB) -> Tồn kho nguyên liệu
+2. Chuyển nguyên liệu từ kho nguyên liệu sang kho sản xuất
+3. Đơn hàng từ khách hàng -> Kế hoạch sản xuất -> Lệnh sản xuất -> Đổ nguyên liệu -> QC kiểm tra hàng trên dây chuyền
+-> NIR kiểm tra hàng trên dây chuyền -> Thông số vận hành -> QC kiểm tra hàng đóng gói -> Nhập thành phẩm 
+-> xuất bán hàng -> Tồn kho thành phẩm
+
+Tôi muốn tích hợp hệ thống FMS RAG để truy vấn hỏi đáp, báo cáo.
+Với yêu cầu tạo project ASP.NET Core Web API dotnet 9.0, ngôn ngữ c# như sau:
+1. Sử dụng Dapper để truy vấn cơ sở dữ liệu, Npgsql, Swagger, log ra file txt, authen với Json web token (JWT),
+Sử dụng: Microsoft Agent framework để tạo ai agent.
+
+2. AI sử dụng ollama
+- Chat Model: gpt-oss:120b-cloud
+- EmbeddingModel: nomic-embed-text	//RAG (Embedding) Nhẹ & chất lượng cao
+- Endpoint: "http://192.168.2.252:11434"
+
+3. Chức năng
+- Tự động đồng bộ cơ sở dữ liệu từ: sql server chuyển sang Postgressql phiên bản 18.
+- Tự động đồng bộ tập tin pdf sang Postgressql phiên bản 18.
+- Nhận thông tin truy vấn prompt từ người dùng trả lời thông tin cho các phiếu: nhập nguyên liệu, 
+nhập thành phẩm, bán hàng, nhà cung cấp, nhà sản xuất, tồn kho, báo cáo ...
+- Truy vấn vào Postgressql theo các thông tin phiếu với các câu trả lời nhanh chính xác.
